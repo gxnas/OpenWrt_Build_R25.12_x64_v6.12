@@ -1,0 +1,45 @@
+#!/bin/sh
+
+# 修改基本设置
+uci set system.@system[0].hostname='OpenWrt-GXNAS'
+uci set system.@system[0].zonename='Asia/Shanghai'
+uci set system.@system[0].timezone='CST-8'
+uci -q delete system.ntp.server
+uci add_list system.ntp.server='ntp.aliyun.com'
+uci add_list system.ntp.server='time1.cloud.tencent.com'
+uci add_list system.ntp.server='time.apple.com'
+uci add_list system.ntp.server='time.windows.com'
+uci commit system
+
+# LuCI 默认语言
+uci -q set "luci.main.lang=zh_cn"
+uci -q commit "luci"
+
+# iStore 前端语言
+uci -q set "istore.istore.istore_vue_lang=zh-cn"
+uci -q commit "istore"
+
+# ========== Netdata 强制启用 ==========
+[ -f /etc/config/netdata ] || touch /etc/config/netdata
+uci -q batch <<EOF
+set netdata.netdata=netdata
+set netdata.netdata.enabled='1'
+set netdata.netdata.port='19999'
+commit netdata
+EOF
+
+[ -f /etc/init.d/netdata ] && {
+    chmod +x /etc/init.d/netdata
+    /etc/init.d/netdata enable
+    /etc/init.d/netdata start
+}
+
+# TurboACC 插件默认启用 BBR 拥塞控制
+if [ -f "/etc/config/turboacc" ]; then
+    uci -q set "turboacc.config.tcpcca=bbr"
+    uci -q commit "turboacc"
+    /etc/init.d/turboacc restart >/dev/null 2>&1
+fi
+
+
+exit 0
