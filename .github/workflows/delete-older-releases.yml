@@ -1,0 +1,19 @@
+name: 删除releases，清理旧版本
+on:
+  workflow_dispatch:
+
+jobs:
+  delete-older-releases:
+    runs-on: ubuntu-24.04
+    name: delete-releases-runs
+    permissions:
+      contents: write # 赋予删除 releases 和 tags 的权限
+    steps:
+      - name: 删除releases，清理旧版本
+        uses: dev-drprasad/delete-older-releases@v0.2.0
+        with:
+          repo: ${{ github.repository }}
+          keep_latest: 0
+          delete_tags: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
