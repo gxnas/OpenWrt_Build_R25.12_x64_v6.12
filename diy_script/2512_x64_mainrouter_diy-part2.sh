@@ -79,29 +79,6 @@ sed -i "s/DISTRIB_REVISION='*.*'/DISTRIB_REVISION=' by GXNAS build @R${build_dat
 sed -i "s/OPENWRT_RELEASE=\"*.*\"/OPENWRT_RELEASE=\"OpenWrt_2512_x64_${build_name} by GXNAS build @R${build_date}\"/g" package/base-files/files/usr/lib/os-release
 
 
-# 修复 netdata 自动启动
-if [ -f package/luci-app-netdata/root/etc/init.d/netdata ]; then
-  chmod +x package/luci-app-netdata/root/etc/init.d/netdata
-fi
-mkdir -p package/base-files/files/etc/rc.d
-ln -sf ../init.d/netdata package/base-files/files/etc/rc.d/S99netdata 2>/dev/null || true
-mkdir -p package/base-files/files/etc/netdata
-cat << 'EOF' > package/base-files/files/etc/netdata/netdata.conf
-[global]
-    run as user = root
-    memory mode = ram
-[cloud]
-    enabled = no
-EOF
-mkdir -p package/base-files/files/etc/uci-defaults
-cat << 'EOF' > package/base-files/files/etc/uci-defaults/99-netdata
-#!/bin/sh
-[ -x /etc/init.d/netdata ] && /etc/init.d/netdata enable && /etc/init.d/netdata restart
-exit 0
-EOF
-chmod +x package/base-files/files/etc/uci-defaults/99-netdata
-
-
 # 第三方 Makefile：git.openwrt.org -> github.com/openwrt
 find package -type f \( -name "Makefile" -o -name "*.mk" \) \
     -exec sed -i 's#https://git.openwrt.org/#https://github.com/openwrt/#g' {} + 2>/dev/null || true
