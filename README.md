@@ -29,8 +29,8 @@
 | PassWall | ✓ | ✓ | ✓ | ✓ |
 | AdGuardHome | ✓ | ✓ |   |   |
 | ShadowSocksR Plus+ | ✓ | ✓ | ✓ | ✓ |
-| OAF行为管理 | ✓ | ✓ | ✓ |   |
-| MosDNS | ✓ | ✓ | ✓ |   |
+| OAF行为管理 | ✓ | ✓ |   |   |
+| MosDNS | ✓ | ✓ |   |   |
 | OpenClash | ✓ | ✓ | ✓ | ✓ |
 | Lucky | ✓ | ✓ |   |   |
 | 网络唤醒 | ✓ | ✓ |   |   |
