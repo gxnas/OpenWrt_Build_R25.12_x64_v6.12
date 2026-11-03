@@ -49,10 +49,6 @@ git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config.git packa
 rm -rf package/luci-app-easytier
 git clone --depth=1 https://github.com/EasyTier/luci-app-easytier.git package/luci-app-easytier
 
-# Honk 插件
-rm -rf package/luci-app-easytier
-git clone --depth=1 https://github.com/QiuSimons/luci-app-honk.git package/luci-app-honk
-
 # Liquid 主题
 git clone https://github.com/xylz0928/luci-theme-liquid.git package/luci-theme-liquid
 
