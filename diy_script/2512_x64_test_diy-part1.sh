@@ -45,32 +45,12 @@ rm -rf package/luci-theme-argon package/luci-app-argon-config
 git clone --depth=1 https://github.com/jerrykuku/luci-theme-argon.git package/luci-theme-argon
 git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config.git package/luci-app-argon-config
 
-# EasyTier 插件
-rm -rf package/luci-app-easytier
-git clone --depth=1 https://github.com/EasyTier/luci-app-easytier.git package/luci-app-easytier
-
 # Liquid 主题
 git clone https://github.com/xylz0928/luci-theme-liquid.git package/luci-theme-liquid
 
 # Lucky 插件
 rm -rf package/lucky
 git clone --depth=1 https://github.com/gdy666/luci-app-lucky.git package/lucky
-
-# MosDNS v5 插件
-rm -rf feeds/packages/lang/golang
-git clone --depth=1 https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
-rm -rf feeds/packages/net/v2ray-geodata
-rm -rf package/mosdns package/v2ray-geodata
-git clone --depth=1 https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
-git clone --depth=1 https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
-
-# Netdata 插件
-rm -rf package/luci-app-netdata
-git clone --depth=1 https://github.com/sirpdboy/luci-app-netdata package/luci-app-netdata
-
-# OpenAppFilter 插件
-rm -rf package/OpenAppFilter
-git clone --depth=1 https://github.com/destan19/OpenAppFilter.git package/OpenAppFilter
 
 # OpenClash 插件
 rm -rf package/OpenClash
