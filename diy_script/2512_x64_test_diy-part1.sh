@@ -117,6 +117,41 @@ git clone --depth=1 https://github.com/gdy666/luci-app-lucky.git package/lucky
 # OpenClash 插件
 rm -rf package/OpenClash
 git clone --depth=1 https://github.com/vernesong/OpenClash.git package/OpenClash
+# ==================== 预置 OpenClash Meta 核心（自动最新版） ====================
+echo "正在预下载 OpenClash Meta 核心（x86_64）..."
+
+# 获取 Meta 核心最新版本
+META_VERSION=$(curl -sL https://api.github.com/repos/MetaCubeX/mihomo/releases/latest | \
+               grep -oP '"tag_name": "\K[^"]+' | head -1)
+
+if [ -z "$META_VERSION" ]; then
+    echo "警告：获取 Meta 核心版本失败，使用备用下载方式"
+    META_VERSION="v1.19.0"   # 备用版本，可手动改
+fi
+
+echo "OpenClash Meta 核心版本: ${META_VERSION}"
+
+# 创建核心存放目录（OpenClash 默认会从这里找）
+mkdir -p package/OpenClash/luci-app-openclash/root/etc/openclash/core
+
+# 下载 Meta 核心（x86_64 / amd64）
+META_URL="https://github.com/MetaCubeX/mihomo/releases/download/${META_VERSION}/mihomo-linux-amd64-${META_VERSION}.gz"
+
+echo "下载地址: ${META_URL}"
+curl -sL -o /tmp/mihomo.gz "${META_URL}" || \
+wget -q -O /tmp/mihomo.gz "${META_URL}"
+
+if [ -f /tmp/mihomo.gz ]; then
+    gzip -d /tmp/mihomo.gz
+    mv /tmp/mihomo package/OpenClash/luci-app-openclash/root/etc/openclash/core/clash_meta
+    chmod +x package/OpenClash/luci-app-openclash/root/etc/openclash/core/clash_meta
+    echo "OpenClash Meta 核心已预置成功"
+else
+    echo "警告：OpenClash Meta 核心下载失败，将使用在线下载"
+fi
+
+rm -f /tmp/mihomo.gz /tmp/mihomo
+# ===========================================================================
 
 # Poweroffdevice 插件
 rm -rf package/luci-app-poweroffdevice
