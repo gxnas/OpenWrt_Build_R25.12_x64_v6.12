@@ -39,6 +39,68 @@ EOF
 # AdGuardHome 插件
 rm -rf package/luci-app-adguardhome
 git clone --depth=1 https://github.com/kongfl888/luci-app-adguardhome package/luci-app-adguardhome
+# ==================== 预置 AdGuardHome 核心（自动最新版） ====================
+echo "正在添加 AdGuardHome 核心包（自动获取最新版本）..."
+
+rm -rf package/adguardhome-core
+mkdir -p package/adguardhome-core
+
+# 获取最新版本号
+LATEST_VER=$(curl -sL https://api.github.com/repos/AdguardTeam/AdGuardHome/releases/latest | \
+             grep -oP '"tag_name": "\K[^"]+' | head -1 | sed 's/^v//')
+
+if [ -z "$LATEST_VER" ]; then
+    echo "警告：获取 AdGuardHome 最新版本失败，使用默认版本 0.107.80"
+    LATEST_VER="0.107.80"
+fi
+
+echo "AdGuardHome 最新版本: v${LATEST_VER}"
+
+# 生成 Makefile
+cat > package/adguardhome-core/Makefile << EOF
+include \$(TOPDIR)/rules.mk
+
+PKG_NAME:=adguardhome-core
+PKG_VERSION:=${LATEST_VER}
+PKG_RELEASE:=1
+
+PKG_SOURCE:=AdGuardHome_linux_amd64.tar.gz
+PKG_SOURCE_URL:=https://github.com/AdguardTeam/AdGuardHome/releases/download/v\$(PKG_VERSION)/
+PKG_HASH:=skip
+
+PKG_LICENSE:=GPL-3.0-only
+
+include \$(INCLUDE_DIR)/package.mk
+
+define Package/adguardhome-core
+  SECTION:=net
+  CATEGORY:=Network
+  TITLE:=AdGuard Home Core (prebuilt binary for x86_64)
+  URL:=https://github.com/AdguardTeam/AdGuardHome
+endef
+
+define Package/adguardhome-core/description
+  Prebuilt AdGuard Home binary. Installed to /usr/bin/AdGuardHome
+endef
+
+define Build/Prepare
+	mkdir -p \$(PKG_BUILD_DIR)
+	tar -zxf \$(DL_DIR)/\$(PKG_SOURCE) -C \$(PKG_BUILD_DIR)
+endef
+
+define Build/Compile
+endef
+
+define Package/adguardhome-core/install
+	\$(INSTALL_DIR) \$(1)/usr/bin
+	\$(INSTALL_BIN) \$(PKG_BUILD_DIR)/AdGuardHome/AdGuardHome \$(1)/usr/bin/AdGuardHome
+endef
+
+\$(eval \$(call BuildPackage,adguardhome-core))
+EOF
+
+echo "adguardhome-core 包已生成（版本 v${LATEST_VER}）"
+# ===========================================================================
 
 # Argon 主题
 rm -rf package/luci-theme-argon package/luci-app-argon-config
