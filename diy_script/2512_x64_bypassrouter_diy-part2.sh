@@ -102,6 +102,23 @@ find package -name Makefile 2>/dev/null | while read -r mf; do
   fix_pkg_version "$mf"
 done
 
+# 单独处理 luci-app-adguardhome
+if [ -f package/luci-app-adguardhome/Makefile ]; then
+  echo "===== luci-app-adguardhome Makefile 版本信息 ====="
+  grep -E '^(PKG_NAME|PKG_VERSION|PKG_RELEASE|LUCI_VERSION)' \
+    package/luci-app-adguardhome/Makefile || true
+  sed -i -E \
+    's/^(PKG_VERSION:=)([0-9]+\.[0-9]+)-([0-9]{8})/\1\2.\3/' \
+    package/luci-app-adguardhome/Makefile
+  if grep -q '1\.8-20221120' \
+    package/luci-app-adguardhome/Makefile 2>/dev/null; then
+    sed -i 's/1\.8-20221120/1.8.20221120/g' \
+      package/luci-app-adguardhome/Makefile
+  fi
+  echo "===== 修复后 ====="
+  grep -E '^(PKG_NAME|PKG_VERSION|PKG_RELEASE|LUCI_VERSION)' \
+    package/luci-app-adguardhome/Makefile || true
+fi
 
 
 echo "=============DIY2 配置完成============"
