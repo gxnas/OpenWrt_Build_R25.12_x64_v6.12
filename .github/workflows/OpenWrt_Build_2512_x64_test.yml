@@ -46,6 +46,7 @@ jobs:
         echo "  • Intel Xeon Platinum 8171M（26C/52T）"
         echo "  • Intel Xeon E5-2673 v4（20C/40T）"
         echo "  • Intel Xeon E5-2673 v3（12C/24T）"
+        echo "  • Intel Xeon 6975P-C（8C/16T）"
         echo ""
         echo "--------------------------CPU信息--------------------------"
         echo "CPU物理数量: $(cat /proc/cpuinfo | grep "physical id" | sort | uniq | wc -l)"
